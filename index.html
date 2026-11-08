@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1565c0">
+<title>Registro Escolar</title>
+<style>
+:root{--bg:#eef4fa;--card:#fff;--ink:#12304f;--mut:#566d86;--pri:#1565c0;--onpri:#fff;--soft:#e4eef9;--ok:#2e8b57;--late:#d98a00;--bad:#d4452f;--line:#d3e0ee;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1621;--card:#16222f;--ink:#e6eef7;--mut:#9bb0c6;--pri:#5aa9f5;--onpri:#06223d;--soft:#1e3044;--ok:#4cc38a;--late:#f0b429;--bad:#ff7a63;--line:#2a3d52;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1621;--card:#16222f;--ink:#e6eef7;--mut:#9bb0c6;--pri:#5aa9f5;--onpri:#06223d;--soft:#1e3044;--ok:#4cc38a;--late:#f0b429;--bad:#ff7a63;--line:#2a3d52;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
+body{height:100%;background:var(--bg);color:var(--ink);display:flex;justify-content:center}
+[hidden]{display:none!important}
+button{cursor:pointer;border:0;background:none;color:inherit;font:inherit;font-weight:700}
+:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.app{width:100%;max-width:460px;height:100%;background:var(--bg);position:relative;display:flex;flex-direction:column;overflow:hidden}
+.btn{background:var(--pri);color:var(--onpri);padding:14px 22px;border-radius:14px;font-size:16px;width:100%;transition:transform .1s}
+.btn:active{transform:scale(.98)}.btn.line{background:none;color:var(--pri);border:2px solid var(--pri)}
+.msg{min-height:20px;font-size:14px;font-weight:600;text-align:center;color:var(--bad)}.msg.info{color:var(--mut)}
+.field{display:flex;align-items:center;background:var(--soft);border-radius:12px;padding:0 14px;gap:10px}
+.field input,.field select{flex:1;min-width:0;border:0;background:none;padding:15px 0;font-size:16px;font-weight:600;color:var(--ink);outline:0}
+.field:focus-within{box-shadow:0 0 0 3px var(--pri)}
+#auth{flex:1;overflow-y:auto;padding:36px 24px 24px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+#auth h1{font-size:30px;color:var(--pri)}#auth .sub{color:var(--mut);font-weight:600;margin-bottom:8px}
+#auth form{display:flex;flex-direction:column;gap:12px}
+.reg-only{display:none}.reg .reg-only{display:flex}
+.chk{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--mut)}.chk input{width:20px;height:20px;accent-color:var(--pri)}
+.link{color:var(--pri);font-size:14px;text-decoration:underline;align-self:center;padding:8px}
+.top{background:var(--pri);color:var(--onpri);padding:14px 18px}.top h1{font-size:19px}
+.views{flex:1;position:relative;min-height:0}
+.view{display:none;position:absolute;inset:0;overflow-y:auto;flex-direction:column}.view.on{display:flex}
+.hero{background:var(--pri);color:var(--onpri);padding:4px 18px 56px;display:flex;align-items:center;gap:14px}
+.av{width:60px;height:60px;border-radius:50%;background:var(--soft);color:var(--pri);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;flex:none}
+.hero h2{font-size:19px;line-height:1.2}.hero p{font-size:14px;opacity:.9;font-weight:600}
+.body{padding:16px;display:flex;flex-direction:column;gap:14px}.hero+.body{margin-top:-40px}
+.card{background:var(--card);border-radius:18px;padding:16px;border:1px solid var(--line)}
+.today{display:flex;flex-direction:column;gap:4px;align-items:flex-start}.today small{color:var(--mut);font-weight:600;text-transform:capitalize}.today b{font-size:22px}
+.chip{display:inline-block;border-radius:20px;padding:3px 12px;font-size:13px;font-weight:800;color:#fff;margin-top:4px}
+.c-ok{background:var(--ok)}.c-late{background:var(--late);color:#1b1500}.c-fal{background:var(--bad)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center}.stat b{display:block;font-size:24px}.stat span{font-size:12px;color:var(--mut);font-weight:700}
+h3{font-size:16px}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.row>div:first-child{flex:1;min-width:0}.row b{display:block;font-size:15px;text-transform:capitalize}.row small{color:var(--mut);font-weight:600;font-size:13px}.row .chip{margin:0}
+.empty{text-align:center;color:var(--mut);font-weight:600;padding:20px 8px}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters button{padding:8px 14px;border-radius:20px;background:var(--soft);color:var(--mut);font-size:14px}.filters .on{background:var(--pri);color:var(--onpri)}
+.frame{display:none;aspect-ratio:1;width:min(100%,280px);margin:0 auto;border-radius:18px;border:4px solid var(--pri);overflow:hidden;background:#000}
+.frame.on{display:block}.frame video{width:100%;height:100%;object-fit:cover}
+.qr{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.qr img{width:180px;height:180px;image-rendering:pixelated;background:#fff;border-radius:12px;padding:8px}
+details summary{cursor:pointer;font-weight:700;color:var(--pri)}details .qr{margin-top:12px}
+.ov{position:absolute;inset:0;background:rgba(5,15,25,.6);display:flex;align-items:center;justify-content:center;padding:24px;z-index:30}
+.ov .card{width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px 20px}
+.big{width:76px;height:76px;border-radius:50%;background:var(--ok);color:#fff;font-size:42px;display:flex;align-items:center;justify-content:center;animation:pop .35s ease-out}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.big{animation:none}.btn{transition:none}}
+.tabs{display:flex;background:var(--card);border-top:1px solid var(--line);}
+.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 2px;font-size:12px;color:var(--mut)}.tabs button span{font-size:22px}.tabs .on{color:var(--pri)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+ <section id="auth">
+  <h1>Registro Escolar</h1>
+  <p class="sub" id="sub">Entra con tu matrícula y contraseña.</p>
+  <p class="msg info" style="line-height:1.45">Tus registros se guardan en la nube y los ves desde cualquier celular.</p>
+  <form id="authForm" novalidate>
+   <label class="field reg-only"><input id="nom" placeholder="Nombre completo" aria-label="Nombre completo" autocomplete="name"></label>
+   <label class="field"><input id="mat" placeholder="Matrícula" aria-label="Matrícula" autocomplete="username" autocapitalize="characters"></label>
+   <label class="field reg-only"><input id="grp" placeholder="Grupo (ej. 3°A)" aria-label="Grupo" autocomplete="off"></label>
+   <label class="field"><input id="pw" type="password" placeholder="Contraseña (mínimo 8)" aria-label="Contraseña" autocomplete="current-password"><button type="button" id="eye" aria-label="Mostrar contraseña">👁️</button></label>
+   <div class="msg" id="amsg" role="alert"></div>
+   <button class="btn" id="abtn" type="submit">Iniciar sesión</button>
+  </form>
+  <button class="link" id="mode" type="button">¿No tienes cuenta? Crear cuenta</button>
+ </section>
+
+ <main id="shell" hidden style="display:none;flex:1;flex-direction:column;min-height:0">
+  <header class="top"><h1 id="ttl">Inicio</h1><small style="display:block;margin-top:4px">Registro de entrada escolar</small></header>
+  <div class="views">
+   <section class="view on" id="v-inicio">
+    <div class="hero"><div class="av" id="ini"></div><div><h2 id="nom2"></h2><p id="meta"></p></div></div>
+    <div class="body">
+     <div class="card today"><small id="fecha"></small><b id="hoyTxt"></b><span id="hoyChip"></span></div>
+     <button class="btn" data-go="scan">Registrar entrada con QR</button>
+     <div class="stats" id="stats"></div>
+     <h3>Últimos registros</h3><div class="list" id="ult"></div>
+    </div>
+   </section>
+   <section class="view" id="v-scan"><div class="body">
+    <div class="card qr"><div class="frame" id="frame"><video id="vid" playsinline muted></video></div>
+     <div class="msg info" id="smsg" role="status">Escanea tu código QR para registrar tu entrada.</div></div>
+    <button class="btn" id="scanBtn">Abrir cámara</button>
+   </div></section>
+   <section class="view" id="v-hist"><div class="body">
+    <div class="filters" id="filters" role="group" aria-label="Filtrar"><button data-f="all" class="on">Todos</button><button data-f="ok">A tiempo</button><button data-f="late">Tarde</button><button data-f="fal">Faltó</button></div>
+    <div class="list" id="hist"></div>
+   </div></section>
+   <section class="view" id="v-perf"><div class="body">
+    <div class="card"><h3>Mi perfil</h3><div class="list" id="acct" style="margin-top:10px"></div></div>
+    <div class="card"><h3>Puntualidad</h3><p id="punt" style="margin-top:6px;color:var(--mut);font-weight:600;font-size:14px"></p></div>
+    <div class="msg info" id="pmsg" role="status"></div>
+    <button class="btn" id="logout">Cerrar sesión</button>
+   </div></section>
+  </div>
+  <nav class="tabs" aria-label="Principal">
+   <button data-go="inicio" class="on"><span>🏠</span>Inicio</button>
+   <button data-go="scan"><span>📷</span>Escanear</button>
+   <button data-go="hist"><span>🕐</span>Historial</button>
+   <button data-go="perf"><span>👤</span>Perfil</button>
+  </nav>
+ </main>
+
+ <div class="ov" id="okov" hidden role="dialog" aria-modal="true" aria-labelledby="okt">
+  <div class="card"><div class="big" aria-hidden="true">✓</div><h2 id="okt">Entrada registrada</h2>
+   <b id="okn"></b><span id="okd" style="color:var(--mut);font-weight:600"></span><span id="okc"></span>
+   <button class="btn" id="okb" style="margin-top:10px">Listo</button></div>
+ </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script>if(!window.jsQR)document.write('<script src="https://unpkg.com/jsqr@1.4.0/dist/jsQR.js"><\/script>')</script>
+<script>
+const $=id=>document.getElementById(id),qa=s=>document.querySelectorAll(s);
+const mem={};
+const st={get(k,f){try{const v=localStorage.getItem(k);if(v!==null)return JSON.parse(v)}catch(e){}return k in mem?mem[k]:f},
+ set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const pad=n=>String(n).padStart(2,'0'),dk=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parse=s=>new Date(s+'T12:00:00');
+const fDate=d=>d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+const fTime=d=>d.toLocaleTimeString('es-MX',{hour:'numeric',minute:'2-digit',hour12:true});
+const mins=d=>d.getHours()*60+d.getMinutes();
+const LIM=480,FALTA=540;
+const NAMES={ok:'A tiempo',late:'Tarde',fal:'Faltó'};
+const school=d=>d.getDay()>0&&d.getDay()<6;
+let users={},me=null,view='inicio',filt='all';
+
+const SUPABASE_URL='https://ouzwwoeukwhbyxsqocug.supabase.co',SUPABASE_KEY='sb_publishable_mgF8hV8mhcLgZ3u8s5Dejw__plm2xN4';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const msgErr=e=>{const t=((e&&e.message)||'').toLowerCase();
+ if(t.includes('invalid login'))return'Matrícula o contraseña incorrectas.';
+ if(t.includes('already'))return'Esa matrícula ya tiene cuenta.';
+ if(t.includes('rate'))return'Demasiados intentos. Espera un minuto.';
+ if(t.includes('fetch')||t.includes('network'))return'Sin conexión. Revisa tu internet.';
+ return'No se pudo completar. '+((e&&e.message)||'')};
+async function boot(){const {data:{session:s}}=await sb.auth.getSession();if(!s)return false;
+ const uid=s.user.id;
+ const [p,r]=await Promise.all([sb.from('perfiles').select('*').eq('id',uid).single(),sb.from('registros').select('dia,hora,estado').eq('user_id',uid)]);
+ if(p.error)throw p.error;
+ const mat=p.data.matricula;
+ users[mat]={nombre:p.data.nombre,grupo:p.data.grupo,desde:p.data.desde,regs:(r.data||[]).map(x=>({dia:x.dia,t:x.hora,est:x.estado}))};
+ start(mat);return true}
+
+/* ===== Acceso ===== */
+let mode='login';
+$('mode').onclick=()=>{mode=mode==='login'?'reg':'login';$('auth').classList.toggle('reg',mode==='reg');
+ $('sub').textContent=mode==='reg'?'Crea tu cuenta de alumno.':'Entra con tu matrícula y contraseña.';
+ $('abtn').textContent=mode==='reg'?'Crear cuenta':'Iniciar sesión';
+ $('mode').textContent=mode==='reg'?'Ya tengo cuenta. Iniciar sesión':'¿No tienes cuenta? Crear cuenta';$('amsg').textContent='';$('pw').autocomplete=mode==='reg'?'new-password':'current-password'};
+$('eye').onclick=()=>{const p=$('pw');p.type=p.type==='password'?'text':'password';$('eye').setAttribute('aria-label',p.type==='password'?'Mostrar contraseña':'Ocultar contraseña')};
+$('authForm').addEventListener('submit',async e=>{e.preventDefault();
+ const m=$('amsg'),btn=$('abtn'),mat=$('mat').value.replace(/\s/g,'').toUpperCase(),pw=$('pw').value,nom=$('nom').value.trim().replace(/\s+/g,' '),grp=$('grp').value.trim();
+ if(!mat){m.textContent='Escribe tu matrícula.';return}
+ if(pw.length<8){m.textContent='Usa una contraseña de al menos 8 caracteres.';return}
+ if(mode==='reg'&&(!nom||!grp)){m.textContent='Escribe tu nombre y tu grupo.';return}
+ if(!/^[A-Z0-9._-]{3,30}$/.test(mat)){m.textContent='La matrícula solo puede tener letras, números, punto, guion o guion bajo.';return}
+ btn.disabled=true;m.textContent='';
+ try{
+  const email=mat.toLowerCase()+'@registro-escolar.app';
+  if(mode==='reg'){
+   const {error}=await sb.auth.signUp({email,password:pw,options:{data:{matricula:mat,nombre:nom,grupo:grp}}});
+   if(error)throw error;
+  }else{
+   const {error}=await sb.auth.signInWithPassword({email,password:pw});
+   if(error)throw error;
+  }
+  if(await boot())$('pw').value='';
+  else m.textContent='Cuenta creada, pero no inició sesión. En Supabase desactiva "Confirm email" (Authentication → Sign In / Providers → Email).';
+ }catch(err){m.textContent=msgErr(err)}
+ finally{btn.disabled=false}
+});
+function start(mat){const u=users[mat];if(!u)return
+ me=mat;$('auth').style.display='none';$('shell').hidden=false;$('shell').style.display='flex';
+ $('nom2').textContent=u.nombre;$('meta').textContent='Matrícula '+mat+' · '+u.grupo;
+ $('ini').textContent=u.nombre.split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+ $('punt').textContent='Entrada a tiempo hasta las 8:00 a. m. Después cuenta como tarde. Si no registras antes de las 9:00 a. m., se marca falta.';
+ go('inicio')}
+function logout(){stopScan();me=null;sb.auth.signOut();$('shell').hidden=true;$('shell').style.display='none';$('auth').style.display='';
+ if(mode==='reg')$('mode').click();$('mat').value='';$('pw').value=''}
+$('logout').onclick=logout;
+
+/* ===== Datos de asistencia ===== */
+function days(){const u=users[me],t=new Date(),today=dk(t),out=[],d=parse(u.desde),end=parse(today);
+ for(;d<=end;d.setDate(d.getDate()+1)){if(!school(d))continue;const k=dk(d),r=u.regs.find(x=>x.dia===k);
+  if(r)out.push(r);else if(k<today||(mins(t)>=FALTA&&k!==u.desde))out.push({dia:k,est:'fal'})}
+ return out.reverse()}
+const chip=est=>el('span','chip c-'+est,NAMES[est]);
+function rowOf(r){const row=el('div','row'),w=el('div');
+ w.append(el('b','',fDate(parse(r.dia))),el('small','',r.t?'Entrada a las '+fTime(new Date(r.t)):'Sin registro de entrada'));
+ row.append(w,chip(r.est));return row}
+
+/* ===== Vistas ===== */
+const TITLES={inicio:'Inicio',scan:'Registrar entrada',hist:'Historial de asistencia',perf:'Perfil'};
+function go(v){if(view==='scan'&&v!=='scan')stopScan();view=v;
+ qa('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
+ qa('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.go===v));
+ $('ttl').textContent=TITLES[v];$('v-'+v).scrollTop=0;
+ ({inicio:renderHome,scan:renderScan,hist:renderHist,perf:renderPerf}[v])()}
+qa('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopScan()});
+
+function renderHome(){const u=users[me],t=new Date(),k=dk(t),r=u.regs.find(x=>x.dia===k),all=days();
+ $('fecha').textContent=fDate(t);const c=$('hoyChip');c.innerHTML='';
+ if(r){$('hoyTxt').textContent='Entrada: '+fTime(new Date(r.t));c.append(chip(r.est))}
+ else if(!school(t))$('hoyTxt').textContent='Hoy no hay clases';
+ else if(mins(t)>=FALTA){$('hoyTxt').textContent='Hoy no registraste entrada';if(k!==u.desde)c.append(chip('fal'))}
+ else $('hoyTxt').textContent='Aún no registras tu entrada';
+ const n={ok:0,late:0,fal:0};all.forEach(x=>n[x.est]++);
+ const s=$('stats');s.innerHTML='';
+ [['ok','A tiempo'],['late','Tarde'],['fal','Faltas']].forEach(([e,l])=>{const d=el('div','stat'),b=el('b','',n[e]);b.style.color='var(--'+(e==='fal'?'bad':e)+')';d.append(b,el('span','',l));s.append(d)});
+ const box=$('ult');box.innerHTML='';
+ if(!all.length)box.append(el('div','empty','Aún no hay registros.'));else all.slice(0,3).forEach(x=>box.append(rowOf(x)))}
+
+function renderHist(){const box=$('hist');box.innerHTML='';
+ const rows=days().filter(x=>filt==='all'||x.est===filt);
+ if(!rows.length){box.append(el('div','empty','No hay registros con este filtro.'));return}
+ rows.slice(0,120).forEach(x=>box.append(rowOf(x)))}
+qa('#filters button').forEach(b=>b.onclick=()=>{filt=b.dataset.f;qa('#filters button').forEach(x=>x.classList.toggle('on',x===b));renderHist()});
+
+function renderPerf(){const u=users[me];$('pmsg').textContent='';
+ const a=$('acct');a.innerHTML='';
+ [['Nombre',u.nombre],['Matrícula',me],['Grupo',u.grupo]].forEach(([k,v])=>{const r=el('div','row'),w=el('div');w.append(el('small','',k),el('b','',v));r.append(w);a.append(r)});
+}
+function renderScan(){setMsg('Escanea el QR de la puerta de la escuela.',1)}
+
+/* ===== Escáner y registro ===== */
+const setMsg=(t,info)=>{const m=$('smsg');m.className=info?'msg info':'msg';m.textContent=t};
+let stream=null,raf=0,scanning=false,opening=false,last=0,badAt=0;
+const cv=document.createElement('canvas'),cx=cv.getContext('2d',{willReadFrequently:true});
+async function startScan(){if(scanning||opening)return;opening=true;
+ if(!navigator.mediaDevices){opening=false;setMsg('Este navegador no permite usar la cámara. Abre la app con HTTPS.');return}
+ if(!window.jsQR){opening=false;setMsg('No cargó el lector de QR. Revisa tu conexión y recarga.');return}
+ setMsg('Abriendo cámara…',1);
+ try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false})}
+ catch(e){opening=false;setMsg('No se pudo abrir la cámara. Da permiso en el navegador e inténtalo de nuevo.');return}
+ opening=false;
+ if(view!=='scan'){stopScan();return}
+ const v=$('vid');v.srcObject=stream;await v.play().catch(()=>{});
+ $('frame').classList.add('on');$('scanBtn').textContent='Detener cámara';scanning=true;setMsg('Apunta al código QR.',1);
+ const tick=t=>{if(!scanning)return;
+  if(t-last>120&&v.readyState>=2&&v.videoWidth){last=t;
+   const w=Math.min(420,v.videoWidth),h=Math.round(w*v.videoHeight/v.videoWidth);cv.width=w;cv.height=h;cx.drawImage(v,0,0,w,h);
+   const r=jsQR(cx.getImageData(0,0,w,h).data,w,h);
+   if(r&&r.data){if(r.data.startsWith('RE|')){stopScan();register(r.data);return}
+    if(t-badAt>2000){badAt=t;setMsg('Ese código no es válido. Escanea el QR de la puerta.')}}}
+  raf=requestAnimationFrame(tick)};
+ raf=requestAnimationFrame(tick)}
+function stopScan(){scanning=false;cancelAnimationFrame(raf);if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+ $('frame').classList.remove('on');$('scanBtn').textContent='Abrir cámara'}
+$('scanBtn').onclick=()=>scanning?stopScan():startScan();
+
+async function register(code){setMsg('Registrando…',1);
+ let res;try{const {data,error}=await sb.rpc('registrar_entrada',{codigo:code});res=error?null:data}catch(e){res=null}
+ if(!res||!res.ok){setMsg((res&&res.msg)||'No se pudo registrar. Revisa tu conexión.');return}
+ const u=users[me];let r=u.regs.find(x=>x.dia===res.dia);
+ if(!r){r={dia:res.dia,t:res.hora,est:res.estado};u.regs.push(r)}
+ const nuevo=res.nuevo;
+ $('okt').textContent=nuevo?'Entrada registrada':'Ya registraste hoy';
+ $('okn').textContent=u.nombre;$('okd').textContent=fDate(new Date(r.t))+' · '+fTime(new Date(r.t));
+ const c=$('okc');c.innerHTML='';c.append(chip(r.est));$('okov').hidden=false;$('okb').focus();
+ setMsg(nuevo?'Registro guardado.':'Tu entrada de hoy ya estaba registrada.',1)}
+$('okb').onclick=()=>{$('okov').hidden=true;go('inicio')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('okov').hidden)$('okb').click()});
+
+/* ===== Arranque ===== */
+boot().catch(()=>{});
+</script>
+</body>
+</html>
